@@ -105,7 +105,7 @@ GO
 
 -- Create table Klasse
 CREATE TABLE Klasse (
-    klasseid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    klasseid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     klassenavn NVARCHAR(255) NOT NULL
 ) ON [KlasseGroup];
 
@@ -118,7 +118,7 @@ CREATE TABLE PostNrBy (
 
 -- Create table Elev
 CREATE TABLE Elev (
-    elevid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    elevid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     fornavn NVARCHAR(255) NOT NULL,
     efternavn NVARCHAR(255) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE Elev (
 
 -- Create table Laerer
 CREATE TABLE Laerer (
-    laererid INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+    laererid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     fornavn NVARCHAR(255) NOT NULL,
     efternavn NVARCHAR(255) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
