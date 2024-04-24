@@ -105,7 +105,7 @@ GO
 
 -- Create table Klasse
 CREATE TABLE Klasse (
-    klasseid INT PRIMARY KEY,
+    klasseid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     klassenavn NVARCHAR(255) NOT NULL
 ) ON [KlasseGroup];
 
@@ -118,7 +118,7 @@ CREATE TABLE PostNrBy (
 
 -- Create table Elev
 CREATE TABLE Elev (
-    elevid INT PRIMARY KEY,
+    elevid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fornavn NVARCHAR(255) NOT NULL,
     efternavn NVARCHAR(255) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE Elev (
 
 -- Create table Laerer
 CREATE TABLE Laerer (
-    laererid INT PRIMARY KEY,
+    laererid INT NOT NULL AUTO_INCREMENT PRIMARY KEY
     fornavn NVARCHAR(255) NOT NULL,
     efternavn NVARCHAR(255) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
@@ -149,30 +149,48 @@ CREATE TABLE Underviser (
 ) ON [LaererGroup];
 
 -- Mock Data
-INSERT INTO Klasse (klasseid, klassenavn)
-VALUES (1, '1.A'),
-       (2, '2.B'),
-       (3, '3.C');
+INSERT INTO Klasse (klassenavn)
+VALUES ('1.A'),
+       ('2.B'),
+       ('3.C');
 
 INSERT INTO PostNrBy (postnr, bynavn)
 VALUES (2000, 'Århus'),
         (3000, 'Helsingør'),
         (4000, 'Roskilde');
 
-INSERT INTO Elev (elevid, fornavn, efternavn, adresse, postnr, klasseid)
-VALUES (1, 'Hans', 'Jensen', 'Strandvej 1', 2000, 1),
-        (2, 'Mia', 'Hansen', 'Bjerggade 5', 3000, 2),
-        (3, 'Peter', 'Pedersen', 'Skovvej 10', 4000, 3);
+INSERT INTO Elev (fornavn, efternavn, adresse, postnr, klasseid)
+VALUES ('Hans', 'Jensen', 'Strandvej 1', 2000, 1),
+        ('Mia', 'Hansen', 'Bjerggade 5', 3000, 2),
+        ('Peter', 'Pedersen', 'Skovvej 10', 4000, 3);
 
-INSERT INTO Laerer (laererid, fornavn, efternavn, adresse, postnr)
-VALUES (101, 'Mette', 'Nielsen', 'Landevej 20', 2000),
-        (102, 'Thomas', 'Schmidt', 'Byvej 30', 3000),
-        (103, 'Birgitte', 'Christensen', 'Hovedgaden 40', 4000);
+INSERT INTO Laerer (fornavn, efternavn, adresse, postnr)
+VALUES ('Mette', 'Nielsen', 'Landevej 20', 2000),
+        ('Thomas', 'Schmidt', 'Byvej 30', 3000),
+        ('Birgitte', 'Christensen', 'Hovedgaden 40', 4000);
 
     INSERT INTO Underviser (fag, laererid, klasseid)
-    VALUES ('Dansk', 101, 1),
-            ('Matematik', 102, 2),
-            ('Engelsk', 103, 3),
-            ('Historie', 101, 2),
-            ('Fysik', 102, 1),
-            ('Biologi', 103, 3);
+    VALUES ('Dansk', 1, 1),
+            ('Matematik', 2, 2),
+            ('Engelsk', 3, 3),
+            ('Historie', 1, 2),
+            ('Fysik', 2, 1),
+            ('Biologi', 3, 3);
+
+-- Show data is present
+-- -- Check Klasse table
+SELECT * FROM Klasse;
+
+-- Check a few columns from PostNrBy
+SELECT postnr, bynavn FROM PostNrBy;
+
+-- Check Elev table with some filtering (e.g., showing students from Klasse 2.B)
+SELECT * FROM Elev WHERE klasseid = (SELECT klasseid FROM Klasse WHERE klassenavn = '2.B');
+
+-- Check Laerer table
+SELECT * FROM Laerer;
+
+-- Check Underviser table with subject and teacher name
+SELECT u.fag, l.fornavn, l.efternavn
+FROM Underviser u
+INNER JOIN Laerer l ON u.laererid = l.laererid;
