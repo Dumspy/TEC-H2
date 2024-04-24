@@ -147,3 +147,32 @@ CREATE TABLE Underviser (
     FOREIGN KEY (klasseid) REFERENCES Klasse(klasseid),
     PRIMARY KEY (laererid, klasseid, fag)
 ) ON [LaererGroup];
+
+-- Mock Data
+INSERT INTO Klasse (klasseid, klassenavn)
+VALUES (1, '1.A'),
+       (2, '2.B'),
+       (3, '3.C');
+
+INSERT INTO PostNrBy (postnr, bynavn)
+VALUES (2000, 'Århus'),
+        (3000, 'Helsingør'),
+        (4000, 'Roskilde');
+
+INSERT INTO Elev (elevid, fornavn, efternavn, adresse, postnr, klasseid)
+VALUES (1, 'Hans', 'Jensen', 'Strandvej 1', 2000, 1),
+        (2, 'Mia', 'Hansen', 'Bjerggade 5', 3000, 2),
+        (3, 'Peter', 'Pedersen', 'Skovvej 10', 4000, 3);
+
+INSERT INTO Laerer (laererid, fornavn, efternavn, adresse, postnr)
+VALUES (101, 'Mette', 'Nielsen', 'Landevej 20', 2000),
+        (102, 'Thomas', 'Schmidt', 'Byvej 30', 3000),
+        (103, 'Birgitte', 'Christensen', 'Hovedgaden 40', 4000);
+
+    INSERT INTO Underviser (fag, laererid, klasseid)
+    VALUES ('Dansk', 101, 1),
+            ('Matematik', 102, 2),
+            ('Engelsk', 103, 3),
+            ('Historie', 101, 2),
+            ('Fysik', 102, 1),
+            ('Biologi', 103, 3);
