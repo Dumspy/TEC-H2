@@ -25,7 +25,7 @@ CREATE DATABASE [skoleDB]
 ( NAME = N'LaererFile1', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\LaererFile1.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
 ( NAME = N'LaererFile2', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\LaererFile2.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [UnderviserGroup]
-( NAME = N'UnderviserFile1', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\UnderviserFile1.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'UnderviserFile1', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\UnderviserFile1.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
 ( NAME = N'UnderviserFile2', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\UnderviserFile2.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
     LOG ON
 ( NAME = N'skoleDB_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\skoleDB_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
