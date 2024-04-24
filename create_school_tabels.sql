@@ -10,13 +10,13 @@ CREATE DATABASE [skoleDB]
     ON  PRIMARY
 ( NAME = N'skoleDB', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\skoleDB.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [KlasseGroup]
-( NAME = N'KlasseFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\KlasseFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'KlasseFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\KlasseFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [PostNrByGroup]
-( NAME = N'PostNrByFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\PostNrByFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'PostNrByFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\PostNrByFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [ElevGroup]
-( NAME = N'ElevFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\ElevFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'ElevFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\ElevFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [LaererGroup]
-( NAME = N'LaererFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\LaererFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'LaererFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\LaererFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB ),
     FILEGROUP [UnderviserGroup]
 ( NAME = N'UnderviserFile', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.DBFELIX\MSSQL\DATA\UnderviserFile.ndf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
     LOG ON
@@ -107,14 +107,14 @@ ALTER DATABASE [skoleDB] ADD FILEGROUP [UnderviserGroup];
 CREATE TABLE Klasse (
     klasseid INT PRIMARY KEY,
     klassenavn NVARCHAR(255) NOT NULL
-) ON FILEGROUP KlasseGroup;
+) ON KlasseGroup;
 
 -- Create table PostNrBy
 CREATE TABLE PostNrBy (
     postnr INT PRIMARY KEY,
     bynavn NVARCHAR(255) NOT NULL
     CONSTRAINT chk_postnr CHECK (postnr BETWEEN 1000 AND 9999)
-) ON FILEGROUP PostNrByGroup;
+) ON PostNrByGroup;
 
 -- Create table Elev
 CREATE TABLE Elev (
@@ -126,7 +126,7 @@ CREATE TABLE Elev (
     klasseid INT NOT NULL,
     FOREIGN KEY (postnr) REFERENCES PostNrBy(postnr),
     FOREIGN KEY (klasseid) REFERENCES Klasse(klasseid)
-) ON FILEGROUP ElevGroup;
+) ON ElevGroup;
 
 -- Create table Laerer
 CREATE TABLE Laerer (
@@ -136,7 +136,7 @@ CREATE TABLE Laerer (
     adresse NVARCHAR(255) NOT NULL,
     postnr INT NOT NULL,
     FOREIGN KEY (postnr) REFERENCES PostNrBy(postnr),
-) ON FILEGROUP LaererGroup;
+) ON LaererGroup;
 
 -- Create table Underviser
 CREATE TABLE Underviser (
@@ -146,4 +146,4 @@ CREATE TABLE Underviser (
     FOREIGN KEY (laererid) REFERENCES Laerer(laererid),
     FOREIGN KEY (klasseid) REFERENCES Klasse(klasseid),
     PRIMARY KEY (laererid, klasseid, fag)
-) ON FILEGROUP UnderviserGroup;
+) ON UnderviserGroup;
