@@ -2,7 +2,10 @@ USE [master]
 GO
 
 IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'skoleDB')
-    DROP DATABASE [skoleDB]
+BEGIN
+  ALTER DATABASE [skoleDB] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+  DROP DATABASE [skoleDB];
+END;
 GO
 
 CREATE DATABASE [skoleDB]
@@ -101,14 +104,14 @@ GO
 CREATE TABLE Klasse (
     klasseid INT PRIMARY KEY,
     klassenavn NVARCHAR(255) NOT NULL
-) ON KlasseGroup;
+) ON [KlasseGroup];
 
 -- Create table PostNrBy
 CREATE TABLE PostNrBy (
     postnr INT PRIMARY KEY
     CONSTRAINT chk_postnr CHECK (postnr BETWEEN 1000 AND 9999),
     bynavn NVARCHAR(255) NOT NULL
-) ON PostNrByGroup;
+) ON [PostNrByGroup];
 
 -- Create table Elev
 CREATE TABLE Elev (
@@ -120,7 +123,7 @@ CREATE TABLE Elev (
     klasseid INT NOT NULL,
     FOREIGN KEY (postnr) REFERENCES PostNrBy(postnr),
     FOREIGN KEY (klasseid) REFERENCES Klasse(klasseid)
-) ON ElevGroup;
+) ON [ElevGroup];
 
 -- Create table Laerer
 CREATE TABLE Laerer (
@@ -130,7 +133,7 @@ CREATE TABLE Laerer (
     adresse NVARCHAR(255) NOT NULL,
     postnr INT NOT NULL,
     FOREIGN KEY (postnr) REFERENCES PostNrBy(postnr),
-) ON LaererGroup;
+) ON [LaererGroup];
 
 -- Create table Underviser
 CREATE TABLE Underviser (
@@ -140,4 +143,4 @@ CREATE TABLE Underviser (
     FOREIGN KEY (laererid) REFERENCES Laerer(laererid),
     FOREIGN KEY (klasseid) REFERENCES Klasse(klasseid),
     PRIMARY KEY (laererid, klasseid, fag)
-) ON UnderviserGroup;
+) ON [LaererGroup];
