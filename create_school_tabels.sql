@@ -106,7 +106,7 @@ GO
 -- Create table Klasse
 CREATE TABLE Klasse (
     klasseid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    klassenavn NVARCHAR(255) NOT NULL
+    klassenavn NVARCHAR(50) NOT NULL UNIQUE
 ) ON [KlasseGroup];
 
 -- Create table PostNrBy
@@ -119,8 +119,8 @@ CREATE TABLE PostNrBy (
 -- Create table Elev
 CREATE TABLE Elev (
     elevid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    fornavn NVARCHAR(255) NOT NULL,
-    efternavn NVARCHAR(255) NOT NULL,
+    fornavn NVARCHAR(50) NOT NULL,
+    efternavn NVARCHAR(75) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
     postnr INT NOT NULL,
     klasseid INT NOT NULL,
@@ -131,8 +131,8 @@ CREATE TABLE Elev (
 -- Create table Laerer
 CREATE TABLE Laerer (
     laererid INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    fornavn NVARCHAR(255) NOT NULL,
-    efternavn NVARCHAR(255) NOT NULL,
+    fornavn NVARCHAR(50) NOT NULL,
+    efternavn NVARCHAR(75) NOT NULL,
     adresse NVARCHAR(255) NOT NULL,
     postnr INT NOT NULL,
     FOREIGN KEY (postnr) REFERENCES PostNrBy(postnr),
@@ -140,7 +140,7 @@ CREATE TABLE Laerer (
 
 -- Create table Underviser
 CREATE TABLE Underviser (
-    fag NVARCHAR(255) NOT NULL,
+    fag NVARCHAR(50) NOT NULL,
     laererid INT NOT NULL,
     klasseid INT NOT NULL,
     FOREIGN KEY (laererid) REFERENCES Laerer(laererid),
