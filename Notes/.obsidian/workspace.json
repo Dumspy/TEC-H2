@@ -1,0 +1,153 @@
+{
+  "main": {
+    "id": "ed9587610aa24b0d",
+    "type": "split",
+    "children": [
+      {
+        "id": "1b2ad2ec76225eb5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2b3d20ee68261850",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Databaseserver.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "507f81928e6550cf",
+    "type": "split",
+    "children": [
+      {
+        "id": "8254820ad9197c97",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "177eb37c61862484",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "cb31427827dc7cc1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "229df895e19a784f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "7f96240159b5a7a5",
+    "type": "split",
+    "children": [
+      {
+        "id": "163313e58152b3ed",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6cfa1fc7dda06d16",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Databaseserver.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "02f0db0d60cbd2d0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Databaseserver.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "17d9057f45afb528",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "91b29d2bdfd5b979",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Databaseserver.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "2b3d20ee68261850",
+  "lastOpenFiles": [
+    "Databaseserver.md"
+  ]
+}
