@@ -325,7 +325,7 @@ GO
 -- Create users
 USE [master]
 GO
-IF EXISTS (SELECT * FROM sys.logins WHERE name = N'FilmProvider')
+IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'FilmProvider')
 BEGIN
   DROP LOGIN FilmProvider;
 END
@@ -342,7 +342,7 @@ GO
 
 USE [master]
 GO
-IF EXISTS (SELECT * FROM sys.logins WHERE name = N'FilmManager')
+IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'FilmManager')
 BEGIN
   DROP LOGIN FilmManager;
 END
