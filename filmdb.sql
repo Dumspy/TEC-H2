@@ -99,20 +99,22 @@ CREATE TABLE Film (
   Titel nvarchar(255) NOT NULL,
   Instruktør nvarchar(255),
   Spilletid INT CHECK (Spilletid BETWEEN 0 AND 180), -- Enforce spilletid range
-  Beskrivelse ntext,
-  GenreNavn nvarchar(255) FOREIGN KEY REFERENCES Genre(GenreNavn)
+  Dato date,
+  FilmGerne INT FOREIGN KEY REFERENCES Genre(ID)
 );
 GO
 
 CREATE TABLE Genre (
-  GenreNavn nvarchar(255) PRIMARY KEY
+  ID INT PRIMARY KEY,
+  GenreNavn nvarchar(255) NOT NULL,
+  Beskrivelse nvarchar(255),
 );
 GO
 
 CREATE TABLE Skuespiller (
   ID INT PRIMARY KEY,
   Navn nvarchar(255) NOT NULL,
-  Portræt BLOB  -- Portræt can be an image
+  Portræt nvarchar(255),
 );
 GO
 
