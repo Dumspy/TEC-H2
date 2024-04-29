@@ -94,6 +94,13 @@ GO
 ALTER DATABASE [filmDB] SET  READ_WRITE
 GO
 
+CREATE TABLE Genre (
+  ID INT PRIMARY KEY,
+  GenreNavn nvarchar(255) NOT NULL,
+  Beskrivelse nvarchar(255),
+);
+GO
+
 CREATE TABLE Film (
   ID INT PRIMARY KEY,
   Titel nvarchar(255) NOT NULL,
@@ -101,13 +108,6 @@ CREATE TABLE Film (
   Spilletid INT CHECK (Spilletid BETWEEN 0 AND 180), -- Enforce spilletid range
   Dato date,
   FilmGerne INT FOREIGN KEY REFERENCES Genre(ID)
-);
-GO
-
-CREATE TABLE Genre (
-  ID INT PRIMARY KEY,
-  GenreNavn nvarchar(255) NOT NULL,
-  Beskrivelse nvarchar(255),
 );
 GO
 
