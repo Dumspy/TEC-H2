@@ -133,6 +133,9 @@ GO
 USE [msdb]
 GO
 
+EXEC msdb.dbo.sp_delete_job @job_id=N'7c8c6475-5d76-4aab-bad9-79281bb24626', @delete_unused_schedule=1
+GO
+
 /****** Object:  Job [filmDB Backup.filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
@@ -196,6 +199,9 @@ QuitWithRollback:
 EndSave:
 GO
 
+EXEC msdb.dbo.sp_delete_job @job_id=N'5c3abea2-2879-4b02-add8-11f2aced071b', @delete_unused_schedule=1
+GO
+
 /****** Object:  Job [filmDB Backup.filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
@@ -257,6 +263,9 @@ GOTO EndSave
 QuitWithRollback:
     IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
 EndSave:
+GO
+
+EXEC msdb.dbo.sp_delete_job @job_id=N'ca02b26d-e27e-4d05-b250-33c8dba50c52', @delete_unused_schedule=1
 GO
 
 /****** Object:  Job [filmDB Backup.filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
