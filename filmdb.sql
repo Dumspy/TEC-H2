@@ -94,6 +94,9 @@ GO
 ALTER DATABASE [filmDB] SET  READ_WRITE
 GO
 
+use [filmDB]
+GO
+
 CREATE TABLE Genre (
   ID INT PRIMARY KEY,
   GenreNavn nvarchar(255) NOT NULL,
