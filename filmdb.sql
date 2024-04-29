@@ -133,8 +133,10 @@ GO
 USE [msdb]
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Full backup';
-GO
+IF EXISTS (SELECT TOP 1 1 FROM msdb.dbo.sysjobs WHERE name = N'filmDB Backup.filmDB Full backup')
+BEGIN
+  EXEC msdb.dbo.sp_delete_job @job_name = N'filmDB Backup.filmDB Full backup';
+END;
 
 /****** Object:  Job [filmDB Backup.filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
 BEGIN TRANSACTION
@@ -199,8 +201,10 @@ QuitWithRollback:
 EndSave:
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Diff backup';
-GO
+IF EXISTS (SELECT TOP 1 1 FROM msdb.dbo.sysjobs WHERE name = N'filmDB Backup.filmDB Diff backup')
+BEGIN
+  EXEC msdb.dbo.sp_delete_job @job_name = N'filmDB Backup.filmDB Diff backup';
+END;
 
 /****** Object:  Job [filmDB Backup.filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
 BEGIN TRANSACTION
@@ -265,8 +269,10 @@ QuitWithRollback:
 EndSave:
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Log backup';
-GO
+IF EXISTS (SELECT TOP 1 1 FROM msdb.dbo.sysjobs WHERE name = N'filmDB Backup.filmDB Log backup')
+BEGIN
+  EXEC msdb.dbo.sp_delete_job @job_name = N'filmDB Backup.filmDB Log backup';
+END;
 
 /****** Object:  Job [filmDB Backup.filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
 BEGIN TRANSACTION
