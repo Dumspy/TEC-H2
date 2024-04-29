@@ -99,14 +99,14 @@ use [filmDB]
 GO
 
 CREATE TABLE Genre (
-  ID INT PRIMARY KEY,
+  ID INT IDENTITY(1, 1) PRIMARY KEY,
   GenreNavn nvarchar(255) NOT NULL,
   Beskrivelse nvarchar(255),
 );
 GO
 
 CREATE TABLE Film (
-  ID INT PRIMARY KEY,
+  ID INT IDENTITY(1, 1) PRIMARY KEY,
   Titel nvarchar(255) NOT NULL,
   Instruktør nvarchar(255),
   Spilletid INT CHECK (Spilletid BETWEEN 0 AND 180), -- Enforce spilletid range
@@ -116,7 +116,7 @@ CREATE TABLE Film (
 GO
 
 CREATE TABLE Skuespiller (
-  ID INT PRIMARY KEY,
+  ID INT IDENTITY(1, 1) PRIMARY KEY,
   Navn nvarchar(255) NOT NULL,
   Portræt nvarchar(255),
 );
@@ -332,4 +332,22 @@ GOTO EndSave
 QuitWithRollback:
     IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
 EndSave:
+GO
+
+-- Create users
+USE [master]
+GO
+CREATE LOGIN [FilmProvider] WITH PASSWORD=N'Password123', DEFAULT_DATABASE=[filmDB], CHECK_EXPIRATION=ON, CHECK_POLICY=ON
+GO
+CREATE USER [FilmProvider] FOR LOGIN [FilmProvider] WITH DEFAULT_SCHEMA=[dbo]
+GO
+GRANT INSERT ON [Film] TO [FilmProvider];
+GO
+
+
+USE [master]
+GO
+CREATE LOGIN [FilmManager] WITH PASSWORD=N'Password123', DEFAULT_DATABASE=[filmDB], CHECK_EXPIRATION=ON, CHECK_POLICY=ON
+GO
+CREATE USER [FilmManager] FOR LOGIN [FilmManager] WITH DEFAULT_SCHEMA=[dbo]
 GO
