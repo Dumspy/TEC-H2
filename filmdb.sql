@@ -94,6 +94,7 @@ GO
 ALTER DATABASE [filmDB] SET  READ_WRITE
 GO
 
+-- Create tables
 use [filmDB]
 GO
 
@@ -126,4 +127,209 @@ CREATE TABLE FilmSkuespiller (
   SkuespillerID INT FOREIGN KEY REFERENCES Skuespiller(ID),
   PRIMARY KEY (FilmID, SkuespillerID)
 );
+GO
+
+-- Setup backup
+USE [msdb]
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
+EXEC msdb.dbo.sp_delete_job @job_id=N'7c8c6475-5d76-4aab-bad9-79281bb24626', @delete_unused_schedule=1
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
+BEGIN TRANSACTION
+DECLARE @ReturnCode INT
+SELECT @ReturnCode = 0
+/****** Object:  JobCategory [Database Maintenance]    Script Date: 29-04-2024 08:31:11 ******/
+IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'Database Maintenance' AND category_class=1)
+BEGIN
+EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Database Maintenance'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+
+END
+
+DECLARE @jobId BINARY(16)
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'filmDB Backup.filmDB Full backup',
+		@enabled=1,
+		@notify_level_eventlog=2,
+		@notify_level_email=0,
+		@notify_level_netsend=0,
+		@notify_level_page=0,
+		@delete_level=0,
+		@description=N'No description available.',
+		@category_name=N'Database Maintenance',
+		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+/****** Object:  Step [filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'filmDB Full backup',
+		@step_id=1,
+		@cmdexec_success_code=0,
+		@on_success_action=1,
+		@on_success_step_id=0,
+		@on_fail_action=2,
+		@on_fail_step_id=0,
+		@retry_attempts=0,
+		@retry_interval=0,
+		@os_run_priority=0, @subsystem=N'SSIS',
+		@command=N'/Server "$(ESCAPE_NONE(SRVR))" /SQL "Maintenance Plans\filmDB Backup" /set "\Package\filmDB Full backup.Disable;false"',
+		@flags=0
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'filmDB Backup.filmDB Full backup',
+		@enabled=1,
+		@freq_type=4,
+		@freq_interval=1,
+		@freq_subday_type=1,
+		@freq_subday_interval=0,
+		@freq_relative_interval=0,
+		@freq_recurrence_factor=0,
+		@active_start_date=20240429,
+		@active_end_date=99991231,
+		@active_start_time=20000,
+		@active_end_time=235959,
+		@schedule_uid=N'774dc287-d188-47ab-852e-b79924adcc21'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+COMMIT TRANSACTION
+GOTO EndSave
+QuitWithRollback:
+    IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
+EndSave:
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
+EXEC msdb.dbo.sp_delete_job @job_id=N'5c3abea2-2879-4b02-add8-11f2aced071b', @delete_unused_schedule=1
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
+BEGIN TRANSACTION
+DECLARE @ReturnCode INT
+SELECT @ReturnCode = 0
+/****** Object:  JobCategory [Database Maintenance]    Script Date: 29-04-2024 08:31:39 ******/
+IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'Database Maintenance' AND category_class=1)
+BEGIN
+EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Database Maintenance'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+
+END
+
+DECLARE @jobId BINARY(16)
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'filmDB Backup.filmDB Diff backup',
+		@enabled=1,
+		@notify_level_eventlog=2,
+		@notify_level_email=0,
+		@notify_level_netsend=0,
+		@notify_level_page=0,
+		@delete_level=0,
+		@description=N'No description available.',
+		@category_name=N'Database Maintenance',
+		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+/****** Object:  Step [filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'filmDB Diff backup',
+		@step_id=1,
+		@cmdexec_success_code=0,
+		@on_success_action=1,
+		@on_success_step_id=0,
+		@on_fail_action=2,
+		@on_fail_step_id=0,
+		@retry_attempts=0,
+		@retry_interval=0,
+		@os_run_priority=0, @subsystem=N'SSIS',
+		@command=N'/Server "$(ESCAPE_NONE(SRVR))" /SQL "Maintenance Plans\filmDB Backup" /set "\Package\filmDB Diff backup.Disable;false"',
+		@flags=0
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'filmDB Backup.filmDB Diff backup',
+		@enabled=1,
+		@freq_type=4,
+		@freq_interval=1,
+		@freq_subday_type=4,
+		@freq_subday_interval=30,
+		@freq_relative_interval=0,
+		@freq_recurrence_factor=0,
+		@active_start_date=20240429,
+		@active_end_date=99991231,
+		@active_start_time=0,
+		@active_end_time=235959,
+		@schedule_uid=N'f62d2c67-55f9-461e-adac-dce2bc3615e4'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+COMMIT TRANSACTION
+GOTO EndSave
+QuitWithRollback:
+    IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
+EndSave:
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
+EXEC msdb.dbo.sp_delete_job @job_id=N'ca02b26d-e27e-4d05-b250-33c8dba50c52', @delete_unused_schedule=1
+GO
+
+/****** Object:  Job [filmDB Backup.filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
+BEGIN TRANSACTION
+DECLARE @ReturnCode INT
+SELECT @ReturnCode = 0
+/****** Object:  JobCategory [Database Maintenance]    Script Date: 29-04-2024 08:31:49 ******/
+IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'Database Maintenance' AND category_class=1)
+BEGIN
+EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Database Maintenance'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+
+END
+
+DECLARE @jobId BINARY(16)
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'filmDB Backup.filmDB Log backup',
+		@enabled=1,
+		@notify_level_eventlog=2,
+		@notify_level_email=0,
+		@notify_level_netsend=0,
+		@notify_level_page=0,
+		@delete_level=0,
+		@description=N'No description available.',
+		@category_name=N'Database Maintenance',
+		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+/****** Object:  Step [filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'filmDB Log backup',
+		@step_id=1,
+		@cmdexec_success_code=0,
+		@on_success_action=1,
+		@on_success_step_id=0,
+		@on_fail_action=2,
+		@on_fail_step_id=0,
+		@retry_attempts=0,
+		@retry_interval=0,
+		@os_run_priority=0, @subsystem=N'SSIS',
+		@command=N'/Server "$(ESCAPE_NONE(SRVR))" /SQL "Maintenance Plans\filmDB Backup" /set "\Package\filmDB Log backup.Disable;false"',
+		@flags=0
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'filmDB Backup.filmDB Log backup',
+		@enabled=1,
+		@freq_type=4,
+		@freq_interval=1,
+		@freq_subday_type=4,
+		@freq_subday_interval=10,
+		@freq_relative_interval=0,
+		@freq_recurrence_factor=0,
+		@active_start_date=20240429,
+		@active_end_date=99991231,
+		@active_start_time=0,
+		@active_end_time=235959,
+		@schedule_uid=N'5861f376-2798-4f31-802d-83e66a82b9e0'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+COMMIT TRANSACTION
+GOTO EndSave
+QuitWithRollback:
+    IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
+EndSave:
 GO
