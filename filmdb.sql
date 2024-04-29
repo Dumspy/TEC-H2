@@ -325,6 +325,11 @@ GO
 -- Create users
 USE [master]
 GO
+IF EXISTS (SELECT * FROM sys.logins WHERE name = N'FilmProvider')
+BEGIN
+  DROP LOGIN FilmProvider;
+END
+GO
 CREATE LOGIN [FilmProvider] WITH PASSWORD=N'Password123', DEFAULT_DATABASE=[filmDB], CHECK_EXPIRATION=ON, CHECK_POLICY=ON
 GO
 USE [filmDB]
@@ -336,6 +341,11 @@ GO
 
 
 USE [master]
+GO
+IF EXISTS (SELECT * FROM sys.logins WHERE name = N'FilmManager')
+BEGIN
+  DROP LOGIN FilmManager;
+END
 GO
 CREATE LOGIN [FilmManager] WITH PASSWORD=N'Password123', DEFAULT_DATABASE=[filmDB], CHECK_EXPIRATION=ON, CHECK_POLICY=ON
 GO
