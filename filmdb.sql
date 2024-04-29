@@ -133,7 +133,7 @@ GO
 USE [msdb]
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_id=N'7c8c6475-5d76-4aab-bad9-79281bb24626', @delete_unused_schedule=1
+EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Full backup';
 GO
 
 /****** Object:  Job [filmDB Backup.filmDB Full backup]    Script Date: 29-04-2024 08:31:11 ******/
@@ -199,7 +199,7 @@ QuitWithRollback:
 EndSave:
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_id=N'5c3abea2-2879-4b02-add8-11f2aced071b', @delete_unused_schedule=1
+EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Diff backup';
 GO
 
 /****** Object:  Job [filmDB Backup.filmDB Diff backup]    Script Date: 29-04-2024 08:31:39 ******/
@@ -265,7 +265,7 @@ QuitWithRollback:
 EndSave:
 GO
 
-EXEC msdb.dbo.sp_delete_job @job_id=N'ca02b26d-e27e-4d05-b250-33c8dba50c52', @delete_unused_schedule=1
+EXEC msdb.dbo.sp_delete_job @job_name=N'filmDB Backup.filmDB Log backup';
 GO
 
 /****** Object:  Job [filmDB Backup.filmDB Log backup]    Script Date: 29-04-2024 08:31:49 ******/
