@@ -1,0 +1,17 @@
+<article class="p-4">
+    <h3 class="truncate">{{item.title}}</h3>
+    <div class="flex justify-between">
+        <img [src]="item.image" [alt]="item.title" class="h-12">
+        <div class="flex flex-col items-end">
+            <p>{{item.price | currency: 'DKK'}}</p>
+            <div class="flex flex-row">
+                <div class="flex flex-row gap-1 mr-2 items-center justify-center">
+                    <button aria-label="Decrease quantity" class="w-6 h-6 bg-gray-200 text-gray-700 font-bold text-center" (click)="decreaseQuantity()">-</button>
+                    <p aria-label="Quantity" class="px-2 text-center h-6 bg-gray-200 text-gray-700 font-bold tabular-nums">{{quantity | async}}</p>
+                    <button aria-label="Increase quantity" id="temp" class="w-6 h-6 bg-gray-200 text-gray-700 font-bold text-center" (click)="increaseQuantity()">+</button>
+                </div>
+                <button [attr.aria-label]="'Remove '+item.title+' from cart'" (click)="removeItem()">Remove</button>
+            </div>
+        </div>
+    </div>
+</article>

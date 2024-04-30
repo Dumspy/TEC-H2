@@ -1,0 +1,11 @@
+<article class="border shadow-md p-2 rounded-sm h-80 flex flex-col justify-between">
+    <div>
+        <h3 #title [id]="'product' + product.id" class="text-xl font-semibold truncate">{{product.title}}</h3>
+        <img [src]="product.image" alt="product image" class="h-24">
+        <p class="text-slate-600 text-base line-clamp-5">{{product.description}}</p>
+    </div>
+    <div class="flex flex-row justify-between items-end">
+        <p>{{product.price | currency: 'DKK'}}</p>
+        <button #button [id]="'product' + product.id+'AddToCart'"  class="bg-blue-500 hover:bg-blue-700 text-slate-200 font-bold py-2 px-4 rounded" (click)="addToCart()" [attr.aria-labelledby]="button.id+' '+title.id">Add to cart</button>
+    </div>
+</article>

@@ -1,0 +1,14 @@
+<div class="flex justify-between items-center px-4 py-2 border-b">
+    <p class="text-xl font-bold">Orders</p>
+    <button (click)="parrent?.toggle()" class="text-xl font-bold" aria-label="Close cart">&times;</button>
+</div>
+<div>
+    <ng-container *ngFor="let item of orders | async; let i = index">
+        <app-orderitems [order]="item" [id]="i"></app-orderitems>
+        <hr *ngIf="i !== (orders | async)?.length">
+    </ng-container>
+</div>
+<div class="flex justify-between items-center px-4 py-2 border-t">
+    <p class="text-xl font-bold">Dagens omsætning</p>
+    <p class="text-xl font-bold">{{ totalValue | currency: 'DKK' }}</p>
+</div>

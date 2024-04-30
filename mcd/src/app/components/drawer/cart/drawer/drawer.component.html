@@ -1,0 +1,20 @@
+<div class="flex flex-col px-4 py-2 border-b">
+    <div class="flex justify-between w-full">
+        <p class="text-xl font-bold">Cart</p>
+        <button (click)="parrent?.toggle()" class="text-xl font-bold" aria-label="Close cart">&times;</button>
+    </div>
+    <p>Order number: {{orderId}}</p>
+</div>
+<p class="px-4" *ngIf="((quantity | async) || -1) < 0">Your cart is empty</p>
+<ng-container *ngFor="let item of cart | async; let i = index">
+    <app-cart-item [item]="item"></app-cart-item>
+    <hr *ngIf="i !== (cart | async)?.length">
+</ng-container>
+<div class="flex justify-between items-center px-4 py-2 border-t">
+    <p class="text-xl font-bold">Total</p>
+    <p class="text-xl font-bold">{{total | async | currency: 'DKK'}}</p>
+</div>
+<div>
+    <button class="w-full py-2 bg-green-500 text-white font-bold" (click)="checkout()">Bestil</button>
+    <button class="w-full py-2 text-black font-bold" (click)="clearCart()">Annuller Ordre</button>
+</div>
