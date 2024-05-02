@@ -15,7 +15,7 @@ var dbPath = Path.Join(path, "app.db");
 
 builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseSqlite($"Data Source={dbPath}"));
 
-builder.Services.AddTransient<UserService>();
+builder.Services.AddSingleton<UserService>();
 
 var app = builder.Build();
 

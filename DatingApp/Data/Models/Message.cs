@@ -11,6 +11,8 @@ public class Message
     public User Receiver { get; set; }
     
     public string Content { get; set; }
+    
+    [DataType(DataType.Date)]
     public DateTime SentAt { get; set; }
     
     public bool IsRead { get; set; }

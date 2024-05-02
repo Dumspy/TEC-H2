@@ -9,7 +9,7 @@ public class MainDBContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<User?> Users { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<Message> Messages { get; set; }
 }

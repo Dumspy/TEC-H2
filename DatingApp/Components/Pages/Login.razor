@@ -1,0 +1,52 @@
+@page "/Login"
+@using System.Timers
+@using DatingApp.Components.Layout
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@layout EmptyLayout
+@implements IDisposable
+@inject UserService UserService
+@rendermode InteractiveServer
+
+<main>
+    <h1>Login</h1>
+    <p>Use the form below to login to your account.</p>
+    <div>
+        <label for="email">Email</label>
+        <input @bind="_email" @bind:event="oninput" @onkeyup="@ResetTimer" type="email" id="email" placeholder="Email" />
+    </div>
+    
+    @if (_currentUser != null)
+    {
+        <h1>found user with email: @_email</h1>
+    } else {
+        <h1>no user found with email: @_email</h1>
+    }
+</main>
+
+@code {
+    string _email = "";
+    Timer _debounceTimer = default!;
+    User? _currentUser;
+    
+    protected override void OnInitialized()
+    {
+        _debounceTimer = new Timer(500);
+        _debounceTimer.Elapsed += OnDebounceFinish;
+        _debounceTimer.AutoReset = false;
+    }
+    
+    void ResetTimer(KeyboardEventArgs e)
+    {
+        _debounceTimer.Stop();
+        _debounceTimer.Start();        
+    }
+    
+    private async void OnDebounceFinish(Object? source, ElapsedEventArgs e)
+    {
+        _currentUser = UserService.GetUserByEmail(_email);
+        await InvokeAsync( StateHasChanged );
+    }
+
+    void IDisposable.Dispose() => _debounceTimer?.Dispose(); 
+}
