@@ -13,9 +13,10 @@ var folder = Environment.SpecialFolder.LocalApplicationData;
 var path = Environment.GetFolderPath(folder);
 var dbPath = Path.Join(path, "app.db");
 
-builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseSqlite($"Data Source={dbPath}"));
-
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<UserService>();
+
+builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
 

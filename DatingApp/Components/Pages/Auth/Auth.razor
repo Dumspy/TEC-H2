@@ -1,0 +1,110 @@
+@page "/Auth"
+@using System.Timers
+@using DatingApp.Components.Layout
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@layout EmptyLayout
+@implements IDisposable
+@inject UserService UserService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@rendermode InteractiveServer
+
+<div class="w-screen h-screen flex items-center justify-center flex-col">
+    <h1 class="mb-4 text-3xl">PageTitle Xddd</h1>
+    <EditForm EditContext="@_editContext" class="w-1/2" Enhance FormName="loginForm">
+        <DataAnnotationsValidator/>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                <Email></Email>
+            </label>
+            <InputText @bind-Value="_formUser.Email" @onkeyup="ResetTimer" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="example@example.com"/>
+            <ValidationMessage For="() => _formUser.Email" class="text-red-500 text-sm"/>
+        </div>
+        @if (!_didFetch || !_editContext.IsValid(_editContext.Field("Email")))
+        {
+            <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">Welcome1</button>
+        }
+        else
+        {
+            @if (_isFetching)
+            {
+                <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            }
+            else if (!_emailExists)
+            {
+                <button @onclick="NavigateToSignup" class="w-full py-1.5 rounded border">Welcome</button>
+            }
+            else
+            {
+                <button @onclick="NavigateToLogin" class="w-full py-1.5 rounded border">Welcome back</button>
+            }
+        }
+
+        <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    User _formUser = new();
+    EditContext _editContext;
+
+    bool _emailExists = false;
+    bool _didFetch = false;
+    bool _isFetching = false;
+
+    Timer _debounceTimer = default!;
+
+    protected override void OnInitialized()
+    {
+        _editContext = new EditContext(_formUser);
+
+        _debounceTimer = new Timer(250);
+        _debounceTimer.Elapsed += OnDebounceFinish;
+        _debounceTimer.AutoReset = false;
+    }
+
+    private async void OnDebounceFinish(Object? source, ElapsedEventArgs e)
+    {
+        _isFetching = true;
+        _didFetch = true;
+        Console.WriteLine("email:" + _formUser.Email);
+        var dbUser = UserService.GetUserByEmail(_formUser.Email);
+        _emailExists = dbUser != null;
+        if (_emailExists)
+        {
+            AuthService.LoginUser = dbUser;
+        }
+        _isFetching = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    void IDisposable.Dispose() => _debounceTimer.Dispose();
+
+    private void ResetTimer()
+    {
+        _debounceTimer.Stop();
+        _debounceTimer.Start();
+    }
+
+    private void NavigateToSignup()
+    {
+        Navigation.NavigateTo("/auth/signup");
+    }
+
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/auth/login");
+    }
+}
+

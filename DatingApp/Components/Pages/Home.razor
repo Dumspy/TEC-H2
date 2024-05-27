@@ -2,6 +2,7 @@
 @using DatingApp.Data.Models
 @using DatingApp.Services
 @inject UserService UserService
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
@@ -9,20 +10,6 @@
 
 Welcome to your new app.
 
-<EditForm Model="@user" OnValidSubmit="Submit">
-    <label for="EmailInput">Email</label>
-    <InputText id="EmailInput" @bind-Value="user.Email"></InputText>
-    <label for="PasswordInput">Password</label>
-    <InputText id="PasswordInput" @bind-Value="user.Password"></InputText>
-    <button type="submit">Submit</button>
-</EditForm>
 
 @code {
-    User user = new User();
-    
-    public void Submit(EditContext context)
-    {
-        var newUser = (User)context.Model;
-        UserService.CreateUser(newUser);
-    }
 }
