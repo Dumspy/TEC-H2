@@ -8,33 +8,52 @@
 @rendermode InteractiveServer
 
 <div class="w-screen h-screen flex items-center justify-center flex-col">
-    <h1 class="mb-4 text-3xl">PageTitle Xddd</h1>
+    <div class="flex flex-col text-start w-1/2 mb-4">
+        <h2 class="text-2xl">Welcome back</h2>
+        <h3 class="text-sm">Please enter your password</h3>
+    </div>
     <EditForm EditContext="@_editContext" class="w-1/2" Enhance FormName="loginForm">
         <DataAnnotationsValidator/>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                Email
-            </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="example@example.com"/>
-            <InputText @bind-Value="_formUser.Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="password"/>
+        <div class="flex flex-col text-start pl-3 border-l-2 border-gray-400 mb-4">
+            <span class="text-slate-400">This email will be used to login to your account</span>
+            <span class="font-semibold text-gray-500">@_formUser.Email</span>
         </div>
+        <InputText @bind-Value="_formUser.Password" class="mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password"/>
+        <button @onclick="SignInCallback" class="w-full py-1.5 rounded border">Sign in</button>
     </EditForm>
 </div>
 
 @code {
     User _formUser = new();
     EditContext _editContext;
-    
+
     protected override void OnAfterRender(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
         if (AuthService.LoginUser.Id == 0)
         {
             Navigation.NavigateTo("/auth");
         }
+
+        _formUser.Email = AuthService.LoginUser.Email;
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
     {
         _editContext = new EditContext(_formUser);
     }
+
+    private void SignInCallback()
+    {
+        if (AuthService.LoginUser.Password != _formUser.Password) return;
+        AuthService.LoginUser = AuthService.LoginUser;
+        AuthService.IsLoggedIn = true;
+        Navigation.NavigateTo("/");
+    }
+
 }

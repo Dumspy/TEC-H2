@@ -23,35 +23,29 @@
         </div>
         @if (!_didFetch || !_editContext.IsValid(_editContext.Field("Email")))
         {
-            <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">Welcome1</button>
+            <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">Welcome</button>
         }
         else
         {
             @if (_isFetching)
             {
                 <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
+                    Welcome back
                 </button>
             }
             else if (!_emailExists)
             {
-                <button @onclick="NavigateToSignup" class="w-full py-1.5 rounded border">Welcome</button>
+                <button @onclick="ContinueAuth" class="w-full py-1.5 rounded border">Welcome</button>
             }
             else
             {
-                <button @onclick="NavigateToLogin" class="w-full py-1.5 rounded border">Welcome back</button>
+                <button @onclick="ContinueAuth" class="w-full py-1.5 rounded border">Welcome back</button>
             }
         }
-
-        <button disabled class="w-full py-1.5 rounded border bg-slate-50 text-slate-500 border-slate-200 shadow-none">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        </button>
     </EditForm>
 </div>
 
@@ -78,13 +72,11 @@
     {
         _isFetching = true;
         _didFetch = true;
-        Console.WriteLine("email:" + _formUser.Email);
+
         var dbUser = UserService.GetUserByEmail(_formUser.Email);
+
         _emailExists = dbUser != null;
-        if (_emailExists)
-        {
-            AuthService.LoginUser = dbUser;
-        }
+        
         _isFetching = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -97,14 +89,21 @@
         _debounceTimer.Start();
     }
 
-    private void NavigateToSignup()
+    private void ContinueAuth()
     {
+        var dbUser = UserService.GetUserByEmail(_formUser.Email);
+        _emailExists = dbUser != null;
+        
+        if (_emailExists)
+        {
+            AuthService.LoginUser = dbUser;
+            Navigation.NavigateTo("/auth/login");
+            return;
+        }
+        
+        AuthService.LoginUser = _formUser;
+        Console.WriteLine(AuthService.LoginUser.Email);
         Navigation.NavigateTo("/auth/signup");
     }
 
-    private void NavigateToLogin()
-    {
-        Navigation.NavigateTo("/auth/login");
-    }
 }
-

@@ -3,13 +3,32 @@
 @using DatingApp.Services
 @inject UserService UserService
 @rendermode InteractiveServer
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-3xl">Hello, world!</h1>
+<button @onclick="NavigateToLogin">login</button>
 
 Welcome to your new app.
 
+Your email is:
+@if (AuthService.IsLoggedIn)
+{
+    <span>@AuthService.LoginUser.Email</span>
+}
+else
+{
+    <span>Not logged in</span>
+}
+
 
 @code {
+
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/auth");
+    }
+
 }

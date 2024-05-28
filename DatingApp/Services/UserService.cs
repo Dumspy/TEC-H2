@@ -13,12 +13,14 @@ public class UserService
         _dbContextFactory = dbContextFactory;
     }
     
-    public void CreateUser(User? user)
+    public User? CreateUser(User? user)
     {
         using(var context = _dbContextFactory.CreateDbContext())
         {
             context.Users.Add(user);
             context.SaveChanges();
+            
+            return context.Users.FirstOrDefault(u => u.Email == user.Email);
         }
     }
     
