@@ -1,34 +1,48 @@
 ﻿@page "/"
 @using DatingApp.Data.Models
 @using DatingApp.Services
-@inject UserService UserService
+@implements IDisposable
 @rendermode InteractiveServer
+@inject UserService UserService
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-3xl">Hello, world!</h1>
-<button @onclick="NavigateToLogin">login</button>
-
-Welcome to your new app.
-
+<br/>
 Your email is:
 @if (AuthService.IsLoggedIn)
 {
-    <span>@AuthService.LoginUser.Email</span>
+    <span>@AuthService.CurrentUser.Email</span>
 }
 else
 {
     <span>Not logged in</span>
 }
+<br/>
+<button @onclick="ProfileCallback" class="bg-green-500 text-white py-1.5 px-1 rounded border">Profile</button>
 
 
 @code {
-
-    private void NavigateToLogin()
+    protected override void OnInitialized()
     {
-        Navigation.NavigateTo("/auth");
+        AuthService.OnStateChange += OnAuthChange; // Subscribe to event
+    }
+
+    private void OnAuthChange(object? sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+    
+    public void Dispose()
+    {
+        AuthService.OnStateChange -= OnAuthChange; // Unsubscribe on dispose
+    }
+
+    private void ProfileCallback()
+    {
+        Navigation.NavigateTo($"/Profile");
     }
 
 }

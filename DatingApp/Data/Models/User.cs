@@ -11,6 +11,8 @@ public class User
     [EmailAddress]
     public string Email { get; set; }
     
+    public UserProfile Profile { get; set; } = null!;
+    
     public User(){}
     
     public User(int id)

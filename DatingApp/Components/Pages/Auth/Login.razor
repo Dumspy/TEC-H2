@@ -51,7 +51,7 @@
     private void SignInCallback()
     {
         if (AuthService.LoginUser.Password != _formUser.Password) return;
-        AuthService.LoginUser = AuthService.LoginUser;
+        AuthService.CurrentUser = AuthService.LoginUser;
         AuthService.IsLoggedIn = true;
         Navigation.NavigateTo("/");
     }

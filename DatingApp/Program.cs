@@ -9,14 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var folder = Environment.SpecialFolder.LocalApplicationData;
-var path = Environment.GetFolderPath(folder);
-var dbPath = Path.Join(path, "app.db");
-
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddSingleton<UserService>();
 
-builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseSqlite($"Data Source={dbPath}"));
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<ProfileService>();
+
+builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseNpgsql($"Host=localhost:5555;Database=dating_app;Username=root;Password=password"));
 
 var app = builder.Build();
 

@@ -1,0 +1,48 @@
+@page "/Profile/{ProfileId:int?}"
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@rendermode InteractiveServer 
+@inject AuthService AuthService
+@inject ProfileService ProfileService
+
+<h1>Profile</h1>
+email:
+@AuthService.CurrentUser?.Email
+
+<AuthedView>
+    @if(ProfileId == null)
+    {
+        <h1>Profile not found</h1>
+    }
+    else
+    {
+        <h1>Profile with ID: @ProfileId</h1>
+    }
+</AuthedView>
+
+@code {
+    [Parameter] 
+    public int? ProfileId { get; set; } = null;
+    
+    private UserProfile? _profile = null;
+    private bool ownProfile = false;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (!firstRender) return;
+        
+        if (ProfileId == null)
+        {
+            _profile = ProfileService.GetProfileByUserId(AuthService.CurrentUser.Id);
+            ProfileId = _profile?.Id;
+            ownProfile = true;
+            
+            return;
+        }
+        
+        _profile = ProfileService.GetProfileById(ProfileId.Value); 
+    }
+
+}

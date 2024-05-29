@@ -46,7 +46,7 @@
 
     private void SignUpCallback()
     {
-        AuthService.LoginUser = UserService.CreateUser(_formUser);
+        AuthService.CurrentUser = UserService.CreateUser(_formUser);
         AuthService.IsLoggedIn = true;
         
         Navigation.NavigateTo("/");

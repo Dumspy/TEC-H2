@@ -3,6 +3,7 @@ using System;
 using DatingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatingApp.Migrations
 {
     [DbContext(typeof(MainDBContext))]
-    partial class MainDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240528081531_postgres fixes")]
+    partial class postgresfixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,8 +101,7 @@ namespace DatingApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserProfiles");
                 });
@@ -126,18 +128,12 @@ namespace DatingApp.Migrations
             modelBuilder.Entity("DatingApp.Data.Models.UserProfile", b =>
                 {
                     b.HasOne("DatingApp.Data.Models.User", "User")
-                        .WithOne("Profile")
-                        .HasForeignKey("DatingApp.Data.Models.UserProfile", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DatingApp.Data.Models.User", b =>
-                {
-                    b.Navigation("Profile")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

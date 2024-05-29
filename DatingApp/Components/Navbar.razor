@@ -1,0 +1,29 @@
+@using DatingApp.Services
+@rendermode InteractiveServer
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<header class="px-4 py-2 flex flex-row justify-between">
+    <h1 class="text-3xl font-semibold">Title</h1>
+    @if (AuthService.IsLoggedIn)
+    {
+        <button @onclick="LogoutCallback">Logout</button>
+    }
+    else
+    {
+        <button @onclick="LoginCallback">Login</button>
+    }
+</header>
+
+@code {
+    private void LoginCallback()
+    {
+        Navigation.NavigateTo("/auth");
+    }
+
+    private void LogoutCallback()
+    {
+        AuthService.Logout();
+        StateHasChanged();
+    }
+}

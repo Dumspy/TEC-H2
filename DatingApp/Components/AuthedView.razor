@@ -1,0 +1,43 @@
+@using DatingApp.Services
+@implements IDisposable
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@if (AuthService.IsLoggedIn)
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        AuthService.OnStateChange += OnAuthChange; // Subscribe to event
+    }
+
+    private void OnAuthChange(object? sender, EventArgs e)
+    {
+        if (!AuthService.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/auth");
+        }
+    }
+    
+    public void Dispose()
+    {
+        AuthService.OnStateChange -= OnAuthChange; // Unsubscribe on dispose
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!AuthService.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/auth");
+        }
+        
+        base.OnAfterRender(firstRender);
+    }
+
+}
