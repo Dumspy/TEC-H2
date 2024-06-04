@@ -3,6 +3,7 @@ using System;
 using DatingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatingApp.Migrations
 {
     [DbContext(typeof(MainDBContext))]
-    partial class MainDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240530095416_added zipcode to userprofile")]
+    partial class addedzipcodetouserprofile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +24,6 @@ namespace DatingApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("DatingApp.Data.Models.Like", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LikeeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LikerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LikeeId");
-
-                    b.HasIndex("LikerId", "LikeeId")
-                        .IsUnique();
-
-                    b.ToTable("Likes");
-                });
 
             modelBuilder.Entity("DatingApp.Data.Models.Message", b =>
                 {
@@ -132,25 +108,6 @@ namespace DatingApp.Migrations
                         .IsUnique();
 
                     b.ToTable("UserProfiles");
-                });
-
-            modelBuilder.Entity("DatingApp.Data.Models.Like", b =>
-                {
-                    b.HasOne("DatingApp.Data.Models.User", "Likee")
-                        .WithMany()
-                        .HasForeignKey("LikeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatingApp.Data.Models.User", "Liker")
-                        .WithMany()
-                        .HasForeignKey("LikerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Likee");
-
-                    b.Navigation("Liker");
                 });
 
             modelBuilder.Entity("DatingApp.Data.Models.Message", b =>

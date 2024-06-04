@@ -21,4 +21,5 @@ public class MainDBContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public DbSet<Message> Messages { get; set; } = null!;
+    public DbSet<Like> Likes { get; set; } = null!;
 }

@@ -1,7 +1,7 @@
 @using DatingApp.Services
 @implements IDisposable
 @inject AuthService AuthService
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 
 @if (AuthService.IsLoggedIn)
 {
@@ -9,9 +9,10 @@
 }
 
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-    
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    [Parameter] public bool ReturnAfterAuth { get; set; } = false;
+
     protected override void OnInitialized()
     {
         AuthService.OnStateChange += OnAuthChange; // Subscribe to event
@@ -19,12 +20,9 @@
 
     private void OnAuthChange(object? sender, EventArgs e)
     {
-        if (!AuthService.IsLoggedIn)
-        {
-            Navigation.NavigateTo("/auth");
-        }
+        AuthRedirect();
     }
-    
+
     public void Dispose()
     {
         AuthService.OnStateChange -= OnAuthChange; // Unsubscribe on dispose
@@ -32,12 +30,21 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (!AuthService.IsLoggedIn)
-        {
-            Navigation.NavigateTo("/auth");
-        }
-        
+        AuthRedirect();
         base.OnAfterRender(firstRender);
     }
 
+    private void AuthRedirect()
+    {
+        if (AuthService.IsLoggedIn)
+        {
+            return;
+        }
+        
+        if (ReturnAfterAuth)
+        {
+            AuthService.RedirectUrl = new Uri(NavigationManager.Uri).AbsolutePath;
+        }
+        NavigationManager.NavigateTo("/auth");
+    }
 }

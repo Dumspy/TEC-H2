@@ -5,14 +5,18 @@
 @inject AuthService AuthService
 @inject ProfileService ProfileService
 
-<h1>Profile</h1>
-email:
-@AuthService.CurrentUser?.Email
-
-<AuthedView>
+<AuthedView ReturnAfterAuth="true">
     @if(ProfileId == null)
     {
-        <h1>Profile not found</h1>
+        @if (_ownProfile)
+        {
+            <h1>Your Profile Hasn't been setup yet</h1>
+            <button class="bg-blue-500 text-white py-1.5 px-1 rounded border">Get started</button>
+        }
+        else
+        {
+            <h1>Profile not found</h1>
+        }
     }
     else
     {
@@ -25,23 +29,26 @@ email:
     public int? ProfileId { get; set; } = null;
     
     private UserProfile? _profile = null;
-    private bool ownProfile = false;
+    private bool _ownProfile = false;
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
 
-        if (!firstRender) return;
+        if (!firstRender || !AuthService.IsLoggedIn) return;
         
         if (ProfileId == null)
         {
             _profile = ProfileService.GetProfileByUserId(AuthService.CurrentUser.Id);
             ProfileId = _profile?.Id;
-            ownProfile = true;
+            _ownProfile = true;
+            Console.WriteLine("Own profile");
+            StateHasChanged();
             
             return;
         }
         
+        StateHasChanged();  
         _profile = ProfileService.GetProfileById(ProfileId.Value); 
     }
 
