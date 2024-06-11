@@ -1,17 +1,20 @@
 @page "/Profile/{ProfileId:int?}"
 @using DatingApp.Data.Models
 @using DatingApp.Services
-@rendermode InteractiveServer 
+@rendermode InteractiveServer
 @inject AuthService AuthService
+@inject IJSRuntime JsRuntime
 @inject ProfileService ProfileService
+@inject NavigationManager Navigation
 
+@ProfileId
 <AuthedView ReturnAfterAuth="true">
-    @if(ProfileId == null)
+    @if (ProfileId == null)
     {
         @if (_ownProfile)
         {
-            <h1>Your Profile Hasn't been setup yet</h1>
-            <button class="bg-blue-500 text-white py-1.5 px-1 rounded border">Get started</button>
+            <h2>Your Profile Hasn't been setup yet</h2>
+            <button class="bg-blue-500 text-white py-1.5 px-1 rounded border" @onclick="CreateProfile">Get started</button>
         }
         else
         {
@@ -20,36 +23,125 @@
     }
     else
     {
-        <h1>Profile with ID: @ProfileId</h1>
+        if (_profile != null)
+        {
+            <section class="flex items-center justify-center flex-col">
+                @if (isEditing)
+                {
+                    <ProfileEditForm Profile="_profile" OnEditFinished="StopEdit"/>
+                }
+                else
+                {
+                    <div class="w-1/2 flex justify-between items-center mb-2">
+                        <h1>Profile with ID: @ProfileId</h1>
+                        <div>
+                            @if (_ownProfile)
+                            {
+                                <button class="py-1.5 rounded border bg-blue-500 text-white px-2" @onclick="StartEdit">Edit</button>
+                                <button class="py-1.5 rounded border bg-red-500 text-white px-2" @onclick="DeleteCallback">Delete</button>
+                            }
+                            else
+                            {
+                                <button class="py-1.5 rounded border bg-green-500 text-white px-2">Like</button>
+                                <button class="py-1.5 rounded border bg-blue-500 text-white px-2">Message</button>
+                            }
+                        </div>
+                    </div>
+                    <div class="w-1/2 flex flex-wrap gap-4 rounded border p-2">
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Firstname</h2>
+                            <p class="font-medium">@_profile?.FirstName</p>
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Lastname</h2>
+                            <p class="font-medium">@_profile?.LastName</p>
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Gender</h2>
+                            <p class="font-medium">@_profile.Gender</p>
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Age</h2>
+                            <p class="font-medium">@_profile.DateOfBirth</p> @* show date for now -- todo show age and hover for date *@
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">City</h2>
+                            <p class="font-medium">@_profile.ZipCode</p> @* todo translate zipcode to city*@
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Height</h2>
+                            <p class="font-medium">@_profile.Height</p>
+                        </div>
+                        <div class="basis-[calc(50%-0.5rem)]">
+                            <h2 class="text-sm text-slate-600">Weight</h2>
+                            <p class="font-medium">@_profile.Weight</p>
+                        </div>
+                    </div>
+                }
+            </section>
+        }
     }
 </AuthedView>
 
 @code {
-    [Parameter] 
-    public int? ProfileId { get; set; } = null;
-    
+    [Parameter] public int? ProfileId { get; set; } = null;
+
     private UserProfile? _profile = null;
     private bool _ownProfile = false;
+    private bool isEditing = false;
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
 
         if (!firstRender || !AuthService.IsLoggedIn) return;
-        
+
         if (ProfileId == null)
         {
             _profile = ProfileService.GetProfileByUserId(AuthService.CurrentUser.Id);
-            ProfileId = _profile?.Id;
+            ProfileId = _profile?.Id ?? null;
             _ownProfile = true;
-            Console.WriteLine("Own profile");
             StateHasChanged();
-            
+
             return;
         }
+
+        _profile = ProfileService.GetProfileById(ProfileId.Value);
+        _ownProfile = _profile?.UserId == AuthService.CurrentUser.Id;
+        ProfileId = _profile?.Id;
+        StateHasChanged();
+    }
+
+    private void StartEdit()
+    {
+        isEditing = true;
+        StateHasChanged();
+    }
+
+    private void StopEdit()
+    {
+        isEditing = false;
+        StateHasChanged();
+    }
+
+    private void CreateProfile()
+    {
+        _profile = ProfileService.CreateProfile(AuthService.CurrentUser.Id);
+        ProfileId = _profile.Id;
+        _ownProfile = true;
+        isEditing = true;
         
-        StateHasChanged();  
-        _profile = ProfileService.GetProfileById(ProfileId.Value); 
+        StateHasChanged();
+    }
+
+    private async Task DeleteCallback()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            ProfileService.DeleteProfile(ProfileId.Value);
+            Navigation.NavigateTo("/");
+        }
     }
 
 }

@@ -15,17 +15,23 @@
     <EditForm EditContext="@_editContext" class="w-1/2" Enhance FormName="loginForm">
         <DataAnnotationsValidator/>
         <div class="flex flex-col text-start pl-3 border-l-2 border-gray-400 mb-4">
-            <span class="text-slate-400">This email will be used to login to your account</span>
-            <span class="font-semibold text-gray-500">@_formUser.Email</span>
+            <h4 class="text-slate-400">This email will be used to login to your account</h4>
+            <p class="font-semibold text-gray-500">@_formUser.Email</p>
         </div>
         <InputText @bind-Value="_formUser.Password" class="mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password"/>
-            <button @onclick="SignInCallback" class="w-full py-1.5 rounded border">Sign in</button>
+        <button @onclick="SignInCallback" class="w-full py-1.5 rounded border">Sign in</button>
     </EditForm>
+    <div class="fixed bottom-4 right-4 transform bg-red-500 text-white px-4 py-2 rounded shadow-lg transition-opacity duration-500 @(_errorShown ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none ")">
+        Invalid password 
+    </div>
 </div>
 
 @code {
-    User _formUser = new();
-    EditContext _editContext;
+    private User _formUser = new();
+    private EditContext _editContext;
+    
+    private Boolean _errorShown = false;
+    private CancellationTokenSource cts;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -50,7 +56,29 @@
 
     private void SignInCallback()
     {
-        AuthService.Login(_formUser.Password);
+        if (AuthService.Login(_formUser.Password)) return;
+        _errorShown = true;
+        StateHasChanged();
+        cts?.Cancel();
+        cts = new CancellationTokenSource();
+        _ = HideAfterDelay(cts.Token);
+    }
+    
+    private async Task HideAfterDelay(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(1500, token); // Adjust the delay as needed
+            if (!token.IsCancellationRequested)
+            {
+                _errorShown = false;
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore cancellation exception
+        }
     }
 
 }

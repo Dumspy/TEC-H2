@@ -15,7 +15,11 @@ public class MainDBContext : DbContext
         
         builder.Entity<Message>()
             .Property(e => e.SentAt)
-            .HasColumnType("timestamp");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.Entity<UserProfile>()
+            .Property(e => e.UserId)
+            .IsRequired();
     }
 
     public DbSet<User> Users { get; set; } = null!;

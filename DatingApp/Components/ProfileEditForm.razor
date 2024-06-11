@@ -1,0 +1,82 @@
+@using DatingApp.Data.Enums
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@inject ProfileService ProfileService
+@rendermode InteractiveServer
+
+<div class="w-1/2">
+    <EditForm Model="@Profile" Enhance OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <div class="flex flex-wrap gap-4 rounded border p-2 mb-2">
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Firstname</h2>
+                <InputText class="font-medium border-b border-black" @bind-Value="Profile.FirstName"/>
+                <ValidationMessage For="() => Profile.FirstName" class="text-red-500 text-sm"/>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Lastname</h2>
+                <InputText class="font-medium border-b border-black" @bind-Value="Profile.LastName"/>
+                <ValidationMessage For="() => Profile.LastName" class="text-red-500 text-sm"/>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Gender</h2>
+                <InputSelect class="font-medium border-b border-black" @bind-Value="Profile.Gender">
+                    <option value="">Select Gender</option>
+                    @foreach (var gender in Enum.GetValues(typeof(Genders)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Age</h2>
+                <InputDate class="font-medium border-b border-black" @bind-Value="Profile.DateOfBirth"/>
+                <ValidationMessage For="() => Profile.DateOfBirth" class="text-red-500 text-sm"/>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">ZipCode</h2>
+                <InputNumber class="font-medium border-b border-black" @bind-Value="Profile.ZipCode"/>
+                <ValidationMessage For="() => Profile.ZipCode" class="text-red-500 text-sm"/>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Height</h2>
+                <InputNumber class="font-medium border-b border-black" @bind-Value="Profile.Height"/>
+                <ValidationMessage For="() => Profile.Height" class="text-red-500 text-sm"/>
+            </div>
+            <div class="basis-[calc(50%-0.5rem)]">
+                <h2 class="text-sm text-slate-600">Weight</h2>
+                <InputNumber class="font-medium border-b border-black" @bind-Value="Profile.Weight"/>
+                <ValidationMessage For="() => Profile.Weight" class="text-red-500 text-sm"/>
+            </div>
+        </div>
+        <div class="flex justify-between">
+            <button type="submit" class="bg-green-500 text-white py-1.5 px-1 rounded border">Save</button>
+            <button @onclick="ExitCallback" class="bg-red-500 text-white py-1.5 px-1 rounded border">Exit</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public UserProfile Profile { get; set; } = new();
+    [Parameter] public EventCallback OnEditFinished { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        ProfileService.UpdateProfile(Profile);  
+        if (OnEditFinished.HasDelegate)
+        {
+            await OnEditFinished.InvokeAsync(null);
+        }
+    }
+
+    private async Task ExitCallback()
+    {
+        if (OnEditFinished.HasDelegate)
+        {
+            await OnEditFinished.InvokeAsync(null);
+        }
+    }
+
+}
