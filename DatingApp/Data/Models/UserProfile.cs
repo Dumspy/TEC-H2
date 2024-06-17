@@ -25,4 +25,10 @@ public class UserProfile
     [ForeignKey("User")]
     public int UserId { get; set; }
     public User User { get; set; } = null!;
+    
+    
+    [InverseProperty("Liker")]
+    public ICollection<Like> Likers { get; set; }
+    [InverseProperty("Likee")]
+    public ICollection<Like> Likees { get; set; }
 }

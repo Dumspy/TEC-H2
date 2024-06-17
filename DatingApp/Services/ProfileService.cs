@@ -22,8 +22,16 @@ public class ProfileService
 
     public UserProfile? GetProfileById(int profileId)
     {
-        using var context = _dbContextFactory.CreateDbContext();
-        return context.UserProfiles.FirstOrDefault(p => p.Id == profileId);
+        using var context = _dbContextFactory.CreateDbContext(); 
+            var profile = context.UserProfiles.FirstOrDefault(p => p.Id == profileId);
+            context.Entry(profile)
+                .Collection(u => u.Likees)
+                .Load();
+            
+            context.Entry(profile)
+                .Collection(u => u.Likers)
+                .Load();
+            return profile;
     }
     
     public UserProfile? UpdateProfile(UserProfile? profile)

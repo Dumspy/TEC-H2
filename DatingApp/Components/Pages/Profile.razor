@@ -3,11 +3,11 @@
 @using DatingApp.Services
 @rendermode InteractiveServer
 @inject AuthService AuthService
+@inject LikeService LikeService
 @inject IJSRuntime JsRuntime
 @inject ProfileService ProfileService
 @inject NavigationManager Navigation
 
-@ProfileId
 <AuthedView ReturnAfterAuth="true">
     @if (ProfileId == null)
     {
@@ -42,7 +42,14 @@
                             }
                             else
                             {
-                                <button class="py-1.5 rounded border bg-green-500 text-white px-2">Like</button>
+                                @if (LikeService.HasLiked(AuthService.CurrentUser.Id, _profile.UserId))
+                                {
+                                    <button class="py-1.5 rounded border bg-red-500 text-white px-2" @onclick="UnlikeCallback">Unlike</button>
+                                }
+                                else
+                                {
+                                    <button class="py-1.5 rounded border bg-green-500 text-white px-2" @onclick="LikeCallback">Like</button>
+                                }
                                 <button class="py-1.5 rounded border bg-blue-500 text-white px-2">Message</button>
                             }
                         </div>
@@ -142,6 +149,18 @@
             ProfileService.DeleteProfile(ProfileId.Value);
             Navigation.NavigateTo("/");
         }
+    }
+
+    private void UnlikeCallback()
+    {
+        LikeService.UnlikeUser(AuthService.CurrentUser.Id, _profile.UserId);
+        StateHasChanged();
+    }
+
+    private void LikeCallback()
+    {
+        LikeService.LikeUser(AuthService.CurrentUser.Id, _profile.UserId);
+        StateHasChanged();
     }
 
 }

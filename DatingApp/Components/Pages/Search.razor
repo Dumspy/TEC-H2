@@ -1,0 +1,92 @@
+@page "/search"
+@using DatingApp.Data
+@using DatingApp.Data.Enums
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@inject SearchService SearchService
+@inject AuthService AuthService
+@rendermode InteractiveServer
+
+<AuthedView ReturnAfterAuth="true">
+    <div class="flex">
+        <div class="basis-1/4 max-w-52 p-2">
+            <EditForm class="flex flex-col gap-2" Model="_searchModel" OnValidSubmit="HandleValidSubmit" Enhance>
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div>
+                    <label for="firstName">First Name:</label><br/>
+                    <InputText class="border-b border-black w-full" id="firstName" @bind-Value="_searchModel.FirstName"/>
+                </div>
+                <div>
+                    <label for="lastName">Last Name:</label><br/>
+                    <InputText class="border-b border-black w-full" id="lastName" @bind-Value="_searchModel.LastName"/>
+                </div>
+                <div>
+                    <label for="gender">Gender:</label><br/>
+                    <InputSelect class="border-b border-black w-full" id="gender" @bind-Value="_searchModel.Gender">
+                        <option value="-1">Select Gender</option>
+                        @foreach (var gender in Enum.GetValues(typeof(Genders)))
+                        {
+                            <option value="@gender">@gender</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="height">Min Height:</label><br/>
+                    <InputNumber class="border-b border-black w-full" id="height" @bind-Value="_searchModel.Height"/>
+                </div>
+                <div>
+                    <label for="weight">Max Weight:</label><br/>
+                    <InputNumber class="border-b border-black w-full" id="weight" @bind-Value="_searchModel.Weight"/>
+                </div>
+                <div>
+                    <label for="zipCode">Zip Code:</label><br/>
+                    <InputNumber class="border-b border-black w-full" id="zipCode" @bind-Value="_searchModel.ZipCode"/>
+                </div>
+                <div>
+                    <label for="minAge">Min Age:</label><br/>
+                    <InputNumber class="border-b border-black w-full" id="minAge" @bind-Value="_searchModel.MinAge"/>
+                    <ValidationMessage For="@(() => _searchModel.MinAge)"/>
+                </div>
+                <div>
+                    <label for="maxAge">Max Age:</label><br/>
+                    <InputNumber class="border-b border-black w-full" id="maxAge" @bind-Value="_searchModel.MaxAge"/>
+                    <ValidationMessage For="@(() => _searchModel.MaxAge)"/>
+                </div>
+                <div class="flex">
+                    <label class="pr-1" for="likesYou">Likes You:</label><br/>
+                    <InputCheckbox class="border-b border-black" id="likesYou" @bind-Value="_searchModel.LikesYou"/>
+                </div>
+
+                <button type="submit" class="bg-blue-500 text-white py-1.5 px-1 rounded border">Search</button>
+            </EditForm>
+        </div>
+        <div class="basis-full p-2">
+            @if (_searchResults != null && _searchResults.Count > 0)
+            {
+                <h3>Search Results:</h3>
+                <ul>
+                    @foreach (var result in _searchResults)
+                    {
+                        <li>
+                            <SearchResult Profile="result"/>
+                        </li>
+                    }
+                </ul>
+            }
+            
+        </div>
+    </div>
+</AuthedView>
+
+@code {
+    private SearchProfile _searchModel = new();
+    private List<UserProfile> _searchResults;
+
+    private async Task HandleValidSubmit()
+    {
+        _searchResults = await SearchService.SearchProfile(_searchModel, AuthService.CurrentUser.Id);
+    }
+
+}

@@ -1,0 +1,33 @@
+@using DatingApp.Data.Models
+@using DatingApp.Services
+@inject NavigationManager Navigation
+@inject PostcodeService PostcodeService
+@rendermode InteractiveServer
+
+<div class="flex items-center justify-between p-4 border-b border-gray-300">
+    <div class="text-gray-700">
+        <span class="font-bold">@Profile.FirstName @Profile.LastName</span>
+        <span class="text-sm">(@Profile.Height cm - @Profile.Weight kg)</span>
+        <span class="block">@PostcodeService.GetCity(Profile.ZipCode)</span>
+        <span class="text-sm text-gray-500">@ProfileAge years old <span class="text-xs text-gray-400">(@FormattedDate)</span></span>
+    </div>
+    <button @onclick="ViewProfileCallback" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded border transition duration-300 ease-in-out">
+        Se Profil
+    </button>
+</div>
+
+
+@code {
+    [Parameter]
+    public UserProfile Profile { get; set; }
+    
+    private int ProfileAge => DateTime.Now.Year - Profile.DateOfBirth.Year -
+                              (DateTime.Now.DayOfYear < Profile.DateOfBirth.DayOfYear ? 1 : 0);
+    private string FormattedDate => Profile.DateOfBirth.ToString("dd/MM/yyyy");
+
+
+    private void ViewProfileCallback()
+    {
+        Navigation.NavigateTo($"/Profile/{Profile.Id}");
+    }
+}

@@ -8,13 +8,11 @@ public class Like
 {
     public int Id { get; set; }
     
-    [ForeignKey("User")]
+    [ForeignKey("Liker")]
     public int LikerId { get; set; }
-    public User Liker { get; set; } = null!;
+    public UserProfile Liker { get; set; } = null!;
     
-    [ForeignKey("User")]
+    [ForeignKey("Likee")]
     public int LikeeId { get; set; }
-    public User Likee { get; set; } = null!;
-    
-    public int Status { get; set; }
+    public UserProfile Likee { get; set; } = null!;
 }

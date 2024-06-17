@@ -13,6 +13,9 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<ProfileService>();
+builder.Services.AddSingleton<SearchService>();
+builder.Services.AddSingleton<PostcodeService>();
+builder.Services.AddSingleton<LikeService>();
 
 builder.Services.AddDbContextFactory<MainDBContext>(optionsBuilder => optionsBuilder.UseNpgsql($"Host=localhost:5555;Database=dating_app;Username=root;Password=password"));
 

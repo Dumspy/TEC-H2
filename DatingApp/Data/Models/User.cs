@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DatingApp.Data.Models;
 
@@ -12,5 +13,6 @@ public class User
     [EmailAddress]
     public string Email { get; set; }
     
+    [InverseProperty("User")]
     public UserProfile Profile { get; set; } = null!;
 }

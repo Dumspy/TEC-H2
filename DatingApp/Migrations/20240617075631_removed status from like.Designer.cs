@@ -3,6 +3,7 @@ using System;
 using DatingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatingApp.Migrations
 {
     [DbContext(typeof(MainDBContext))]
-    partial class MainDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240617075631_removed status from like")]
+    partial class removedstatusfromlike
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,14 +149,14 @@ namespace DatingApp.Migrations
 
             modelBuilder.Entity("DatingApp.Data.Models.Like", b =>
                 {
-                    b.HasOne("DatingApp.Data.Models.UserProfile", "Likee")
-                        .WithMany("Likees")
+                    b.HasOne("DatingApp.Data.Models.User", "Likee")
+                        .WithMany()
                         .HasForeignKey("LikeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatingApp.Data.Models.UserProfile", "Liker")
-                        .WithMany("Likers")
+                    b.HasOne("DatingApp.Data.Models.User", "Liker")
+                        .WithMany()
                         .HasForeignKey("LikerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -197,13 +200,6 @@ namespace DatingApp.Migrations
                 {
                     b.Navigation("Profile")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DatingApp.Data.Models.UserProfile", b =>
-                {
-                    b.Navigation("Likees");
-
-                    b.Navigation("Likers");
                 });
 #pragma warning restore 612, 618
         }
