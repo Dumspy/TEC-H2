@@ -28,10 +28,10 @@
 
 @code {
     private User _formUser = new();
-    private EditContext _editContext;
+    private EditContext? _editContext;
     
     private Boolean _errorShown = false;
-    private CancellationTokenSource cts;
+    private CancellationTokenSource? _cts;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -59,9 +59,9 @@
         if (AuthService.Login(_formUser.Password)) return;
         _errorShown = true;
         StateHasChanged();
-        cts?.Cancel();
-        cts = new CancellationTokenSource();
-        _ = HideAfterDelay(cts.Token);
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+        _ = HideAfterDelay(_cts.Token);
     }
     
     private async Task HideAfterDelay(CancellationToken token)

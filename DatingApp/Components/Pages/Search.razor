@@ -1,5 +1,4 @@
 @page "/search"
-@using DatingApp.Data
 @using DatingApp.Data.Enums
 @using DatingApp.Data.Models
 @using DatingApp.Services
@@ -58,12 +57,12 @@
                     <label class="pr-1" for="likesYou">Likes You:</label><br/>
                     <InputCheckbox class="border-b border-black" id="likesYou" @bind-Value="_searchModel.LikesYou"/>
                 </div>
-
-                <button type="submit" class="bg-blue-500 text-white py-1.5 px-1 rounded border">Search</button>
+                
+                <StyledButton ButtonStyle="StyledButton.Style.Blue">Search</StyledButton>
             </EditForm>
         </div>
         <div class="basis-full p-2">
-            @if (_searchResults != null && _searchResults.Count > 0)
+            @if (_searchResults.Count > 0)
             {
                 <h3>Search Results:</h3>
                 <ul>
@@ -82,7 +81,7 @@
 
 @code {
     private SearchProfile _searchModel = new();
-    private List<UserProfile> _searchResults;
+    private List<UserProfile> _searchResults = [];
 
     private async Task HandleValidSubmit()
     {

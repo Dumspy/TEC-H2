@@ -52,8 +52,8 @@
             </div>
         </div>
         <div class="flex justify-between">
-            <button type="submit" class="bg-green-500 text-white py-1.5 px-1 rounded border">Save</button>
-            <button @onclick="ExitCallback" class="bg-red-500 text-white py-1.5 px-1 rounded border">Exit</button>
+            <StyledButton ButtonStyle="StyledButton.Style.Green">Save</StyledButton>
+            <StyledButton ButtonStyle="StyledButton.Style.Red" OnClickCallback="ExitCallback">Cancel</StyledButton>
         </div>
     </EditForm>
 </div>

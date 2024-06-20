@@ -11,9 +11,7 @@
         <span class="block">@PostcodeService.GetCity(Profile.ZipCode)</span>
         <span class="text-sm text-gray-500">@ProfileAge years old <span class="text-xs text-gray-400">(@FormattedDate)</span></span>
     </div>
-    <button @onclick="ViewProfileCallback" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded border transition duration-300 ease-in-out">
-        Se Profil
-    </button>
+    <StyledButton ButtonStyle="StyledButton.Style.Blue" OnClickCallback="ViewProfileCallback">Se Profil</StyledButton>
 </div>
 
 

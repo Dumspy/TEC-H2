@@ -11,7 +11,7 @@ public class UserProfile
     [Required]
     public string FirstName { get; set; }
     [Required]
-    public string? LastName { get; set; }
+    public string LastName { get; set; }
     public Genders Gender { get; set; }
     public int Height { get; set; }
     public int Weight { get; set; }

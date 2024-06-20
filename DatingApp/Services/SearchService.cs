@@ -16,8 +16,12 @@ public class SearchService
     public async Task<List<UserProfile>> SearchProfile(SearchProfile searchProfile, int searcherUserId)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync();
+        
+        var ownProfile = context.UserProfiles.Include(x => x.Likers).FirstOrDefault(x => x.UserId == searcherUserId);
+        
         var query = context.UserProfiles.AsQueryable();
         query.Include(x => x.Likees);
+        query = query.Where(x => x.UserId != ownProfile.Id);
 
         if (!string.IsNullOrEmpty(searchProfile.FirstName))
             query = query.Where(x => x.FirstName.Contains(searchProfile.FirstName));
@@ -50,8 +54,7 @@ public class SearchService
         
         if (searchProfile.LikesYou) 
         {
-            var profile = context.UserProfiles.Include(x => x.Likers).FirstOrDefault(x => x.UserId == searcherUserId);
-            query = query.Where(userProfile => userProfile.Likers.Any(like => like.LikeeId == profile.Id));
+            query = query.Where(userProfile => userProfile.Likers.Any(like => like.LikeeId == ownProfile.Id));
         }
 
         

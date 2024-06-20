@@ -3,7 +3,7 @@
     "tailwindcss": "^3.4.3"
   },
     "scripts": {
-        "build": "npx tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/tailwind.css",
-        "watch": "npx tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/tailwind.css --watch"
+        "build": "npx tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/index.css --minify",
+        "watch": "npx tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/index.css --watch"
     }
 }

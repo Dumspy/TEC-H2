@@ -14,7 +14,7 @@
         @if (_ownProfile)
         {
             <h2>Your Profile Hasn't been setup yet</h2>
-            <button class="bg-blue-500 text-white py-1.5 px-1 rounded border" @onclick="CreateProfile">Get started</button>
+            <StyledButton ButtonStyle="StyledButton.Style.Blue" OnClickCallback="CreateProfile">Opret profil</StyledButton>
         }
         else
         {
@@ -26,7 +26,7 @@
         if (_profile != null)
         {
             <section class="flex items-center justify-center flex-col">
-                @if (isEditing)
+                @if (_isEditing)
                 {
                     <ProfileEditForm Profile="_profile" OnEditFinished="StopEdit"/>
                 }
@@ -37,20 +37,20 @@
                         <div>
                             @if (_ownProfile)
                             {
-                                <button class="py-1.5 rounded border bg-blue-500 text-white px-2" @onclick="StartEdit">Edit</button>
-                                <button class="py-1.5 rounded border bg-red-500 text-white px-2" @onclick="DeleteCallback">Delete</button>
+                                <StyledButton ButtonStyle="StyledButton.Style.Blue" OnClickCallback="StartEdit">Edit</StyledButton>
+                                <StyledButton ButtonStyle="StyledButton.Style.Red" OnClickCallback="DeleteCallback">Delete</StyledButton>
                             }
                             else
                             {
                                 @if (LikeService.HasLiked(AuthService.CurrentUser.Id, _profile.UserId))
                                 {
-                                    <button class="py-1.5 rounded border bg-red-500 text-white px-2" @onclick="UnlikeCallback">Unlike</button>
+                                    <StyledButton ButtonStyle="StyledButton.Style.Red" OnClickCallback="UnlikeCallback">Unlike</StyledButton>
                                 }
                                 else
                                 {
-                                    <button class="py-1.5 rounded border bg-green-500 text-white px-2" @onclick="LikeCallback">Like</button>
+                                    <StyledButton ButtonStyle="StyledButton.Style.Green" OnClickCallback="LikeCallback">Like</StyledButton>
                                 }
-                                <button class="py-1.5 rounded border bg-blue-500 text-white px-2">Message</button>
+                                <StyledButton ButtonStyle="StyledButton.Style.Blue">Message</StyledButton>
                             }
                         </div>
                     </div>
@@ -95,7 +95,7 @@
 
     private UserProfile? _profile = null;
     private bool _ownProfile = false;
-    private bool isEditing = false;
+    private bool _isEditing = false;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -121,13 +121,13 @@
 
     private void StartEdit()
     {
-        isEditing = true;
+        _isEditing = true;
         StateHasChanged();
     }
 
     private void StopEdit()
     {
-        isEditing = false;
+        _isEditing = false;
         StateHasChanged();
     }
 
@@ -136,7 +136,7 @@
         _profile = ProfileService.CreateProfile(AuthService.CurrentUser.Id);
         ProfileId = _profile.Id;
         _ownProfile = true;
-        isEditing = true;
+        _isEditing = true;
         
         StateHasChanged();
     }
